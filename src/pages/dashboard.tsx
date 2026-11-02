@@ -1,181 +1,281 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import DashboardHeader from "../components/dashboard/DashboardHeader";
+import {
+  JoinSessionCard,
+  UpcomingSession,
+} from "../components/dashboard/SessionCards";
+import LiveSessionCard from "../components/dashboard/LiveSessionCard";
+import {
+  NextMatchCard,
+  RecentMatches,
+} from "../components/dashboard/MatchCards";
+import CourtOverview from "../components/dashboard/CourtOverview";
+import BottomNavigation from "../components/dashboard/BottomNavigation";
+import DashboardDialog from "../components/dashboard/DashboardDialog";
+import PreferenceForm from "../components/dashboard/PreferenceForm";
+import JoinSessionForm from "../components/dashboard/JoinSessionForm";
+import DashboardIcon from "../components/dashboard/DashboardIcon";
+import PlayerCard from "../components/dashboard/PlayerCard";
+import {
+  mockCourts,
+  mockDoublesMatch,
+  mockPlayer,
+  mockPreferences,
+  mockQueue,
+  mockRecentMatches,
+  mockSession,
+} from "../data/dashboardMock";
+import type {
+  Court,
+  PlayerPreferences,
+  PlayerStatus,
+} from "../types/dashboard";
+
+type Dialog =
+  | "join"
+  | "host"
+  | "preferences"
+  | "session"
+  | "history"
+  | "notifications";
+
+const dialogTitles: Record<Dialog, string> = {
+  join: "Join a Session",
+  host: "Host a Session",
+  preferences: "Session Preferences",
+  session: "Upcoming Session",
+  history: "Match History",
+  notifications: "Notifications",
+};
 
 const Dashboard = () => {
-  const { session, signOut } = useAuth();
-
   const navigate = useNavigate();
+  const [playerStatus, setPlayerStatus] = useState<PlayerStatus | null>(null);
+  const [preferences, setPreferences] = useState<PlayerPreferences>({
+    ...mockPreferences,
+  });
+  const [dialog, setDialog] = useState<Dialog | null>(null);
+  const [notice, setNotice] = useState("");
+  const match = mockDoublesMatch;
 
-  const handleSignOut = async () => {
-    const result = await signOut();
+  const courts: Court[] = mockCourts.map((court) =>
+    court.id === "court-2"
+      ? {
+          ...court,
+          status:
+            playerStatus === "playing"
+              ? "playing"
+              : playerStatus === "resting"
+                ? "available"
+                : "up_next",
+        }
+      : court,
+  );
 
-    if (result.success) {
-      navigate("/login");
-    }
+  const changeStatus = (status: PlayerStatus) => {
+    setPlayerStatus(status);
+    setNotice(
+      status === "waiting"
+        ? "You rejoined the queue."
+        : `Your status is now ${status}.`,
+    );
   };
 
   return (
-    <main className="min-h-screen bg-gray-100 p-5">
-      <div className="mx-auto max-w-4xl">
-
-        {/* HEADER */}
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Dashboard
-            </h1>
-
-            <p className="mt-1 text-sm text-gray-500">
-              Badminton Queue System
-            </p>
-          </div>
-
-          <button
-            onClick={handleSignOut}
-            className="
-              cursor-pointer
-              rounded-lg
-              bg-red-500
-              px-4 py-2
-              text-sm font-semibold text-white
-              transition
-              hover:bg-red-600
-            "
+    <main
+      id="home"
+      className="dashboard min-h-svh bg-canvas pb-[calc(5.75rem+env(safe-area-inset-bottom))] text-ink lg:pb-14"
+    >
+      <header className="dashboard-topbar sticky top-0 z-30 border-b border-line bg-paper/95 backdrop-blur-xl">
+        <div className="mx-auto flex h-17 w-full max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+          <Link
+            to="/dashboard"
+            aria-label="YorKel dashboard"
+            className="flex items-center gap-2 font-semibold tracking-tight text-accent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
           >
-            Sign Out
-          </button>
-        </div>
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent text-on-accent">
+              <DashboardIcon name="court" className="h-5 w-5" />
+            </span>
+            <span className="text-lg font-black tracking-[-0.05em] text-ink">YOR<span className="text-accent">KEL</span></span>
+          </Link>
 
+          <nav aria-label="Desktop navigation" className="hidden items-center gap-1 lg:flex">
+            <a href="#home" aria-current="page" className="dashboard-desktop-link dashboard-desktop-link-active">Overview</a>
+            <a href="#session-section" className="dashboard-desktop-link">Sessions</a>
+            <a href="#matches-section" className="dashboard-desktop-link">Matches</a>
+            <Link to="/profile" className="dashboard-desktop-link">Player profile</Link>
+          </nav>
 
-        {/* AUTH STATUS */}
-        <div className="mb-6 rounded-2xl bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-xl font-semibold text-gray-900">
-            Authentication Status
-          </h2>
-
-          {session ? (
-            <div>
-              <p className="mb-2 text-green-600">
-                Logged in
-              </p>
-
-              <p className="text-sm text-gray-600">
-                Email:
-                <span className="ml-2 font-semibold text-gray-900">
-                  {session.user.email}
-                </span>
-              </p>
-
-              <p className="mt-2 text-sm text-gray-600">
-                User ID:
-              </p>
-
-              <p className="mt-1 break-all text-xs text-gray-500">
-                {session.user.id}
-              </p>
-            </div>
-          ) : (
-            <p className="text-red-500">
-              No active session
-            </p>
-          )}
-        </div>
-
-
-        {/* TEST CARDS */}
-        <div className="grid gap-4 sm:grid-cols-2">
-
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Queue
-            </h2>
-
-            <p className="mt-2 text-sm text-gray-500">
-              Test your future badminton queue here.
-            </p>
-
+          <div className="flex items-center gap-1">
             <button
-              className="
-                mt-4 cursor-pointer
-                rounded-lg
-                bg-blue-600
-                px-4 py-2
-                text-sm font-semibold text-white
-                hover:bg-blue-700
-              "
+              type="button"
+              aria-label="Notifications"
+              aria-haspopup="dialog"
+              onClick={() => setDialog("notifications")}
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-accent transition hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
-              Join Queue
+              <DashboardIcon name="bell" className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              aria-label="Settings"
+              onClick={() => navigate("/settings")}
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-accent transition hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            >
+              <DashboardIcon name="settings" className="h-5 w-5" />
             </button>
           </div>
-
-
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Current Match
-            </h2>
-
-            <p className="mt-2 text-sm text-gray-500">
-              No match assigned yet.
-            </p>
-
-            <div className="mt-4 rounded-lg bg-gray-100 p-3 text-sm text-gray-600">
-              Court: —
-            </div>
-          </div>
-
-
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Player Status
-            </h2>
-
-            <p className="mt-2 text-sm text-gray-500">
-              Current status
-            </p>
-
-            <p className="mt-3 font-semibold text-orange-500">
-              Waiting
-            </p>
-          </div>
-
-
-          <div className="rounded-2xl bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Test Navigation
-            </h2>
-
-            <div className="mt-4 flex gap-3">
-              <Link
-                to="/login"
-                className="
-                  rounded-lg
-                  border border-gray-300
-                  px-4 py-2
-                  text-sm font-semibold text-gray-700
-                  hover:bg-gray-100
-                "
-              >
-                Login
-              </Link>
-
-              <Link
-                to="/register"
-                className="
-                  rounded-lg
-                  bg-gray-900
-                  px-4 py-2
-                  text-sm font-semibold text-white
-                  hover:bg-gray-800
-                "
-              >
-                Register
-              </Link>
-            </div>
-          </div>
-
         </div>
+      </header>
 
+      <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6 sm:py-8">
+        <DashboardHeader player={mockPlayer} />
+
+        {notice && (
+          <div
+            role="status"
+            className="mt-4 rounded-2xl bg-tint px-4 py-3 text-sm text-accent-dark"
+          >
+            {notice}
+          </div>
+        )}
+
+        <div className="dashboard-content-grid mt-7">
+          <div className="space-y-7">
+          <div id="session-section" className="scroll-mt-24">
+            {playerStatus ? (
+                <LiveSessionCard
+                  session={mockSession}
+                  status={playerStatus}
+                  queue={mockQueue}
+                  preferences={preferences}
+                  onStatusChange={changeStatus}
+                  onPreferences={() => setDialog("preferences")}
+                />
+            ) : (
+              <JoinSessionCard
+                onJoin={() => setDialog("join")}
+                onHost={() => setDialog("host")}
+              />
+            )}
+          </div>
+
+          {playerStatus && playerStatus !== "resting" && (
+            <div>
+              <NextMatchCard
+                match={match}
+                status={playerStatus}
+                onReady={() => changeStatus("ready")}
+              />
+            </div>
+          )}
+
+          <div>
+            {playerStatus ? (
+              <CourtOverview courts={courts} />
+            ) : (
+              <UpcomingSession
+                session={mockSession}
+                onView={() => setDialog("session")}
+              />
+            )}
+          </div>
+
+          </div>
+
+          <div className="space-y-7">
+          <div>
+            <PlayerCard
+              player={mockPlayer}
+              matches={mockRecentMatches}
+              onProfile={() => navigate("/profile")}
+            />
+          </div>
+
+          <div id="matches-section" className="scroll-mt-24">
+            <RecentMatches matches={mockRecentMatches.slice(0, 2)} onViewAll={() => setDialog("history")} />
+          </div>
+          </div>
+        </div>
       </div>
+
+      <BottomNavigation />
+
+      {dialog && (
+        <DashboardDialog
+          key={dialog}
+          title={dialogTitles[dialog]}
+          onClose={() => setDialog(null)}
+        >
+          {dialog === "notifications" && (
+            <div className="py-6 text-center">
+              <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-tint text-accent">
+                <DashboardIcon name="bell" className="h-6 w-6" />
+              </span>
+              <h3 className="font-semibold">No notifications yet</h3>
+              <p className="mt-2 text-sm text-muted">
+                Notifications aren't connected in this preview.
+              </p>
+            </div>
+          )}
+
+          {dialog === "join" && (
+            <JoinSessionForm
+              onJoin={() => {
+                setPlayerStatus("waiting");
+                setDialog(null);
+                setNotice("You joined the demo session.");
+              }}
+            />
+          )}
+
+          {dialog === "host" && (
+            <div className="space-y-3 text-sm leading-6 text-muted">
+              <p>Host session creation is coming soon.</p>
+              <p>
+                You'll be able to create a session, choose courts, and
+                configure match types from the same app.
+              </p>
+            </div>
+          )}
+
+          {dialog === "preferences" && (
+            <PreferenceForm
+              preferences={preferences}
+              sessionMatchTypes={mockSession.matchTypes}
+              onSave={(values) => {
+                setPreferences(values);
+                setDialog(null);
+                setNotice("Session preferences updated.");
+              }}
+            />
+          )}
+
+          {dialog === "session" && (
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold">{mockSession.title}</h3>
+                <p className="mt-1 text-sm text-muted">
+                  Friday, October 30 · 7:00 PM
+                </p>
+              </div>
+              <div className="rounded-2xl bg-tint p-4">
+                <p className="font-medium">
+                  {mockSession.playerCount} / {mockSession.capacity} players
+                </p>
+                <p className="mt-1 text-sm text-accent-dark">
+                  Singles &amp; Doubles
+                </p>
+              </div>
+            </div>
+          )}
+
+          {dialog === "history" && (
+            <RecentMatches matches={mockRecentMatches} />
+          )}
+        </DashboardDialog>
+      )}
     </main>
   );
 };

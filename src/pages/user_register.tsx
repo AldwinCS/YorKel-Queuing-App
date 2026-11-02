@@ -1,222 +1,201 @@
-import type { FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { useRef, useState, type FormEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import PageShell from "../components/PageShell";
+import { useAuth } from "../hooks/useAuth";
+import {
+  CONFIRMATION_MESSAGE,
+  MAX_PASSWORD_LENGTH,
+  MIN_PASSWORD_LENGTH,
+  registrationErrorMessage,
+  validateRegistration,
+} from "../lib/registration";
 
 function UserRegister() {
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const { signUpNewUser } = useAuth();
+  const navigate = useNavigate();
+  const submitting = useRef(false);
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const messageRef = useRef<HTMLParagraphElement>(null);
+  const successRef = useRef<HTMLHeadingElement>(null);
 
-    console.log("Registration form submitted");
+  const showError = (message: string) => {
+    setError(message);
+    requestAnimationFrame(() => messageRef.current?.focus());
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (submitting.current || submitted) return;
+    setError("");
+    const credentials = { fullName, email, password };
+    const validationError = validateRegistration(credentials);
+    if (validationError) {
+      showError(validationError);
+      return;
+    }
+    submitting.current = true;
+    setLoading(true);
+    try {
+      const result = await signUpNewUser(credentials);
+      if (!result.success) {
+        showError(result.error);
+        return;
+      }
+      setPassword("");
+      if (result.data.session) {
+        navigate("/dashboard", { replace: true });
+      } else {
+        setSubmitted(true);
+        requestAnimationFrame(() => successRef.current?.focus());
+      }
+    } catch {
+      showError(registrationErrorMessage());
+    } finally {
+      submitting.current = false;
+      setLoading(false);
+    }
   };
 
   return (
-    <main
-      className="
-        flex min-h-screen items-center justify-center
-        bg-[#f4f6f8] p-5
-        font-[Arial,sans-serif]
-      "
-    >
-      <div
-        className="
-          w-full max-w-105
-          rounded-[14px] bg-white
-          px-6 py-7
-          shadow-[0_8px_24px_rgba(0,0,0,0.08)]
-        "
-      >
-        {/* TITLE */}
-        <h1 className="mb-2 text-center text-[28px] font-bold text-black">
-          Create Account
+    <PageShell>
+      <section className="panel p-6 sm:p-9" aria-labelledby="registerTitle">
+        <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent">
+          Join the game
+        </p>
+        <h1
+          id="registerTitle"
+          className="text-3xl font-semibold tracking-tight"
+        >
+          Create your account
         </h1>
-
-        <p className="mb-6 text-center text-sm text-[#666]">
-          Register to join badminton sessions and matches.
+        <p className="mt-3 mb-7 text-sm leading-6 text-muted">
+          Your next game starts here.
         </p>
 
-        <form id="registerForm" onSubmit={handleSubmit}>
-          {/* FULL NAME */}
-          <div className="mb-4">
-            <label
-              htmlFor="fullName"
-              className="mb-1.5 block text-sm font-bold text-black"
-            >
-              Full Name
-            </label>
-
-            <input
-              type="text"
-              id="fullName"
-              name="fullName"
-              placeholder="Enter your full name"
-              required
-              className="
-                w-full rounded-lg border border-[#ccc]
-                bg-white p-3 text-base text-black
-                outline-none
-                placeholder:text-[#888]
-                focus:border-[#555]
-              "
-            />
-          </div>
-
-          {/* EMAIL */}
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="mb-1.5 block text-sm font-bold text-black"
-            >
-              Email Address
-            </label>
-
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="you@example.com"
-              required
-              className="
-                w-full rounded-lg border border-[#ccc]
-                bg-white p-3 text-base text-black
-                outline-none
-                placeholder:text-[#888]
-                focus:border-[#555]
-              "
-            />
-          </div>
-
-          {/* SKILL LEVEL */}
-          <div className="mb-4">
-            <label
-              htmlFor="skillLevel"
-              className="mb-1.5 block text-sm font-bold text-black"
-            >
-              Skill Level
-            </label>
-
-            <select
-              id="skillLevel"
-              name="skillLevel"
-              required
-              defaultValue=""
-              className="
-                w-full rounded-lg border border-[#ccc]
-                bg-white p-3 text-base text-black
-                outline-none
-                focus:border-[#555]
-              "
-            >
-              <option value="" disabled>
-                Select your skill level
-              </option>
-
-              <option value="beginner">
-                Beginner
-              </option>
-
-              <option value="intermediate">
-                Intermediate
-              </option>
-
-              <option value="advanced">
-                Advanced
-              </option>
-
-              <option value="pro">
-                Pro
-              </option>
-            </select>
-          </div>
-
-          {/* PASSWORD */}
-          <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="mb-1.5 block text-sm font-bold text-black"
-            >
-              Password
-            </label>
-
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Minimum 8 characters"
-              minLength={8}
-              required
-              className="
-                w-full rounded-lg border border-[#ccc]
-                bg-white p-3 text-base text-black
-                outline-none
-                placeholder:text-[#888]
-                focus:border-[#555]
-              "
-            />
-          </div>
-
-          {/* CONFIRM PASSWORD */}
-          <div className="mb-4">
-            <label
-              htmlFor="confirmPassword"
-              className="mb-1.5 block text-sm font-bold text-black"
-            >
-              Confirm Password
-            </label>
-
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              placeholder="Re-enter your password"
-              required
-              className="
-                w-full rounded-lg border border-[#ccc]
-                bg-white p-3 text-base text-black
-                outline-none
-                placeholder:text-[#888]
-                focus:border-[#555]
-              "
-            />
-          </div>
-
-          {/* REGISTER BUTTON */}
-          <button
-            type="submit"
-            className="
-              mt-1.5 w-full cursor-pointer
-              rounded-lg border-0
-              bg-[#111827] p-3.25
-              text-base font-bold text-white
-              transition-colors
-              hover:bg-[#1f2937]
-            "
+        {submitted ? (
+          <div
+            role="status"
+            className="rounded-xl border border-line bg-tint p-5 text-sm leading-6"
           >
-            Register
-          </button>
+            <h2
+              ref={successRef}
+              tabIndex={-1}
+              className="mb-2 text-lg font-semibold outline-none"
+            >
+              Check your email
+            </h2>
+            <p>{CONFIRMATION_MESSAGE}</p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} aria-busy={loading}>
+            <p
+              ref={messageRef}
+              tabIndex={-1}
+              role={error ? "alert" : undefined}
+              className={error ? "form-error" : "sr-only"}
+            >
+              {error}
+            </p>
+            <fieldset
+              disabled={loading}
+              className="min-w-0 space-y-5 disabled:opacity-70"
+            >
+              <legend className="sr-only">Account details</legend>
+              <div>
+                <label htmlFor="fullName" className="form-label">
+                  Name
+                </label>
+                <input
+                  id="fullName"
+                  name="fullName"
+                  autoComplete="name"
+                  type="text"
+                  required
+                  minLength={2}
+                  maxLength={80}
+                  value={fullName}
+                  onChange={(event) => setFullName(event.target.value)}
+                  placeholder="John Doe"
+                  className="form-input"
+                />
+              </div>
+              <div>
+                <label htmlFor="email" className="form-label">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  autoComplete="email"
+                  autoCapitalize="none"
+                  spellCheck={false}
+                  type="email"
+                  required
+                  maxLength={254}
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder="JohnDoe@example.com"
+                  className="form-input"
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="form-label">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    autoComplete="new-password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    minLength={MIN_PASSWORD_LENGTH}
+                    maxLength={MAX_PASSWORD_LENGTH}
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    aria-describedby="passwordHelp"
+                    placeholder={`${MIN_PASSWORD_LENGTH}+ chars, upper/lower + number`}
+                    className="form-input pr-17 placeholder:text-xs sm:placeholder:text-sm"
+                  />
+                  <button
+                    type="button"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                    aria-controls="password"
+                    aria-pressed={showPassword}
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-link absolute inset-y-1 right-1 cursor-pointer px-3 text-xs hover:bg-tint"
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
+              </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="button-primary w-full"
+              >
+                {loading ? "Creating account..." : "Register"}
+              </button>
+            </fieldset>
+          </form>
+        )}
 
-          {/* FORM MESSAGE */}
-          <p
-            id="formMessage"
-            className="mt-4 min-h-5 text-center text-sm"
-          ></p>
-        </form>
-
-        {/* LOGIN LINK */}
-        <p className="mt-5 text-center text-sm text-[#666]">
+        <p className="mt-7 border-t border-line pt-6 text-center text-sm text-muted">
           Already have an account?{" "}
-
-          <Link
-            to="/login"
-            className="
-              font-bold text-[#111827]
-              no-underline
-              hover:underline
-            "
-          >
-            Login
+          <Link to="/login" className="text-link">
+            Log in
           </Link>
         </p>
-      </div>
-    </main>
+      </section>
+    </PageShell>
   );
 }
 
