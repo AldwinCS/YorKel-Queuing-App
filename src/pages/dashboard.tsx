@@ -113,7 +113,7 @@ const Dashboard = () => {
               aria-label="Notifications"
               aria-haspopup="dialog"
               onClick={() => setDialog("notifications")}
-              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-accent transition hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-muted transition hover:bg-elevated hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               <DashboardIcon name="bell" className="h-5 w-5" />
             </button>
@@ -121,7 +121,7 @@ const Dashboard = () => {
               type="button"
               aria-label="Settings"
               onClick={() => navigate("/settings")}
-              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-accent transition hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-muted transition hover:bg-elevated hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               <DashboardIcon name="settings" className="h-5 w-5" />
             </button>
@@ -135,7 +135,7 @@ const Dashboard = () => {
         {notice && (
           <div
             role="status"
-            className="mt-4 rounded-2xl bg-tint px-4 py-3 text-sm text-accent-dark"
+            className="mt-4 rounded-2xl border border-line bg-paper px-4 py-3 text-sm text-ink"
           >
             {notice}
           </div>
@@ -210,7 +210,7 @@ const Dashboard = () => {
         >
           {dialog === "notifications" && (
             <div className="py-6 text-center">
-              <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-tint text-accent">
+              <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-elevated text-ink">
                 <DashboardIcon name="bell" className="h-6 w-6" />
               </span>
               <h3 className="font-semibold">No notifications yet</h3>
@@ -260,11 +260,11 @@ const Dashboard = () => {
                   Friday, October 30 · 7:00 PM
                 </p>
               </div>
-              <div className="rounded-2xl bg-tint p-4">
+              <div className="rounded-2xl bg-elevated p-4">
                 <p className="font-medium">
                   {mockSession.playerCount} / {mockSession.capacity} players
                 </p>
-                <p className="mt-1 text-sm text-accent-dark">
+                <p className="mt-1 text-sm text-muted">
                   Singles &amp; Doubles
                 </p>
               </div>

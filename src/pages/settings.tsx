@@ -71,11 +71,11 @@ export default function Settings() {
         </div>
         {(notice || error) && <p role={error ? "alert" : "status"} className={`rounded-xl border p-4 text-sm leading-6 ${error ? "border-danger/40 bg-danger-tint text-danger-dark" : "border-line bg-paper text-ink"}`}>{error || notice}</p>}
 
-        <Link to="/profile" className="group relative flex min-h-36 items-center gap-5 overflow-hidden rounded-3xl border border-accent/20 bg-tint p-5 transition-colors hover:border-accent/40 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent sm:p-7">
+        <Link to="/profile" className="group relative flex min-h-36 items-center gap-5 overflow-hidden rounded-3xl border border-line bg-paper p-5 transition-colors hover:border-line-strong hover:bg-elevated focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent sm:p-7">
           <span aria-hidden="true" className="flex h-18 w-18 shrink-0 items-center justify-center rounded-full border-4 border-paper bg-accent text-xl font-semibold text-on-accent ring-1 ring-accent/30">{initials}</span>
           <span className="relative z-10 min-w-0 flex-1"><span className="block text-xl font-semibold tracking-tight sm:text-2xl">{profile.player.name}</span><span className="mt-2 block text-sm leading-6 text-muted">View and edit your player profile</span></span>
-          <DashboardIcon name="trophy" className="pointer-events-none absolute -right-5 -bottom-8 h-40 w-40 -rotate-12 text-accent/10" />
-          <DashboardIcon name="chevron" className="relative h-6 w-6 shrink-0 text-accent transition-transform group-hover:translate-x-1" />
+          <DashboardIcon name="trophy" className="pointer-events-none absolute -right-5 -bottom-8 h-40 w-40 -rotate-12 text-muted/10" />
+          <DashboardIcon name="chevron" className="relative h-6 w-6 shrink-0 text-ink transition-transform group-hover:translate-x-1" />
         </Link>
 
         <section aria-labelledby="identityTitle">
@@ -90,14 +90,14 @@ export default function Settings() {
           <h2 id="appearanceTitle" className="dashboard-section-title">Appearance</h2>
           <p className="-mt-2 mb-5 text-sm leading-6 text-muted">Choose a theme or follow your device. System is currently using {resolvedAppearance} mode.</p>
           <div className="grid gap-3 sm:grid-cols-3" role="radiogroup" aria-label="Appearance">
-            {appearanceOptions.map((option) => <button key={option.value} type="button" role="radio" aria-checked={appearance === option.value} onClick={() => setAppearance(option.value)} className={`flex min-h-24 cursor-pointer items-center gap-3 rounded-2xl border p-4 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent ${appearance === option.value ? "border-accent bg-tint text-accent" : "border-line bg-paper text-muted hover:border-accent/40"}`}><DashboardIcon name={option.icon} className="h-6 w-6 shrink-0" /><span><span className="block font-semibold">{option.label}</span><span className="mt-1 block text-xs leading-5">{option.description}</span></span></button>)}
+            {appearanceOptions.map((option) => <button key={option.value} type="button" role="radio" aria-checked={appearance === option.value} onClick={() => setAppearance(option.value)} className={`flex min-h-24 cursor-pointer items-center gap-3 rounded-2xl border p-4 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent ${appearance === option.value ? "border-accent bg-selected text-ink" : "border-line bg-paper text-muted hover:border-line-strong hover:bg-elevated"}`}><DashboardIcon name={option.icon} className={`h-6 w-6 shrink-0 ${appearance === option.value ? "text-accent" : ""}`} /><span><span className="block font-semibold">{option.label}</span><span className="mt-1 block text-sm leading-5 text-muted">{option.description}</span></span></button>)}
           </div>
         </section>
 
         <section aria-labelledby="backupTitle">
           <h2 id="backupTitle" className="dashboard-section-title">Backup and restore</h2>
           <p className="-mt-2 mb-5 text-sm leading-6 text-muted">Create a recovery code or restore a profile saved from another device.</p>
-          <Link to="/settings/backup" className="settings-row panel"><span className="dashboard-action-icon bg-tint text-accent"><DashboardIcon name="shield" /></span><span className="min-w-0 flex-1"><span className="block font-semibold">Back up / restore profile</span><span className="mt-1 block text-sm leading-5 text-muted">Recovery code, saved backup file, or pasted code.</span></span><DashboardIcon name="chevron" className="h-5 w-5 text-muted" /></Link>
+          <Link to="/settings/backup" className="settings-row panel"><span className="dashboard-action-icon bg-elevated text-ink"><DashboardIcon name="shield" /></span><span className="min-w-0 flex-1"><span className="block font-semibold">Back up / restore profile</span><span className="mt-1 block text-sm leading-5 text-muted">Recovery code, saved backup file, or pasted code.</span></span><DashboardIcon name="chevron" className="h-5 w-5 text-ink" /></Link>
         </section>
 
         <section aria-labelledby="deleteTitle" className="rounded-3xl border border-danger/30 bg-paper p-5 sm:p-6">

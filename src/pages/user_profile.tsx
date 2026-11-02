@@ -21,7 +21,7 @@ export default function UserProfile() {
             onClick={() =>
               setNotice("Profile editing will be available in a future update.")
             }
-            className="flex min-h-11 cursor-pointer items-center gap-2 rounded-full px-3 text-sm font-semibold text-accent transition-colors hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className="flex min-h-11 cursor-pointer items-center gap-2 rounded-full px-3 text-sm font-semibold text-accent transition-colors hover:bg-elevated focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             <DashboardIcon name="edit" className="h-5 w-5" />
             <span className="hidden sm:inline">Edit</span>
@@ -33,7 +33,7 @@ export default function UserProfile() {
         {notice && (
           <p
             role="status"
-            className="mb-6 rounded-xl border border-line bg-paper p-4 text-sm leading-6 text-accent-dark"
+            className="mb-6 rounded-xl border border-line bg-paper p-4 text-sm leading-6 text-ink"
           >
             {notice}
           </p>

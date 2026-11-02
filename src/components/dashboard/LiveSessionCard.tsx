@@ -18,15 +18,16 @@ type Props = {
 };
 
 export default function LiveSessionCard({ session, status, queue, preferences, onStatusChange, onPreferences }: Props) {
+  const statusColor = status === "waiting" ? "text-warning-ink" : status === "ready" || status === "playing" ? "text-success-ink" : "text-ink";
   return (
     <section id="sessions" className="panel scroll-mt-6 overflow-hidden" aria-labelledby="liveTitle">
       <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-4 sm:px-6">
         <h2 id="liveTitle" className="font-semibold">{session.title}</h2>
-        <span className="flex items-center gap-1.5 rounded-full bg-tint px-2.5 py-1 text-[10px] font-bold tracking-wider text-accent-dark"><span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-accent" />LIVE</span>
+        <span className="flex items-center gap-1.5 rounded-full bg-success-tint px-2.5 py-1 text-xs font-bold tracking-wider text-success-ink"><span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-success" />LIVE</span>
       </div>
       <div className="p-5 sm:p-6">
-        <p className="text-xs text-muted">Your status</p>
-        <p role="status" className="mt-1 text-2xl font-semibold tracking-tight text-accent-dark">{status.toUpperCase()}</p>
+        <p className="text-sm text-muted">Your status</p>
+        <p role="status" className={`mt-1 text-2xl font-semibold tracking-tight ${statusColor}`}>{status.toUpperCase()}</p>
         <p className="mt-2 text-sm leading-6 text-muted">{statusCopy[status]}</p>
         <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-5 border-y border-line py-5 text-sm">
           <div><dt className="text-xs text-muted">Queue position</dt><dd className="mt-1.5 font-semibold">{status === "waiting" ? `#${queue.position}` : status === "resting" ? "Not in queue" : "Match assigned"}</dd></div>

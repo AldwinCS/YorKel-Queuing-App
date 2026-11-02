@@ -13,7 +13,7 @@ export default function BottomNavigation() {
     <nav aria-label="Main navigation" className="dashboard-navigation fixed inset-x-0 bottom-0 z-20 mx-auto border-t border-line bg-paper px-3 pb-[env(safe-area-inset-bottom)] lg:hidden">
       <div className="grid grid-cols-4 gap-1">
         {([ ["Home", "home"], ["Sessions", "sessions"], ["Matches", "matches"] ] as const).map(([label, key]) => (
-          <a key={key} href={key === "home" ? "#home" : key === "sessions" ? "#session-section" : "#matches-section"} aria-current={key === "home" ? "page" : undefined} className={`${itemClass} ${key === "home" ? "bg-tint text-accent" : "text-muted hover:bg-canvas hover:text-ink"}`}>
+          <a key={key} href={key === "home" ? "#home" : key === "sessions" ? "#session-section" : "#matches-section"} aria-current={key === "home" ? "page" : undefined} className={`${itemClass} ${key === "home" ? "bg-selected text-ink" : "text-muted hover:bg-elevated hover:text-ink"}`}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true"><path d={icons[key]} /></svg>
             {label}
           </a>

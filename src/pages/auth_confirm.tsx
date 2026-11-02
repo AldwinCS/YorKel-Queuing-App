@@ -40,7 +40,7 @@ export default function AuthConfirm() {
   return (
     <PageShell>
       <section className="panel p-6 sm:p-9" aria-labelledby="confirmTitle">
-        <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent">One last step</p>
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-accent">One last step</p>
         <h1 id="confirmTitle" className="mb-4 text-2xl font-semibold tracking-tight">Email confirmation</h1>
         <p role={error ? "alert" : "status"} className={error ? "form-error" : "text-sm leading-6 text-muted"}>{error || "Confirming your email..."}</p>
         {error && <Link to="/login" className="button-primary mt-2 w-full">Go to login</Link>}

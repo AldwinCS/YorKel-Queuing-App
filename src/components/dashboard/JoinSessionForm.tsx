@@ -18,7 +18,7 @@ export default function JoinSessionForm({ onJoin }: { onJoin: () => void }) {
     <div>
       <div className="mb-5 grid grid-cols-3 gap-2" role="group" aria-label="Join method">
         {([ ["code", "Code"], ["qr", "QR Code"], ["link", "Invite Link"] ] as const).map(([value, label]) => (
-          <button key={value} aria-pressed={method === value} onClick={() => { setMethod(value); setError(""); }} className={`button-secondary px-2 text-xs ${method === value ? "border-accent bg-tint" : ""}`}>{label}</button>
+          <button key={value} aria-pressed={method === value} onClick={() => { setMethod(value); setError(""); }} className={`button-secondary px-2 text-sm ${method === value ? "border-accent bg-selected" : ""}`}>{label}</button>
         ))}
       </div>
       {method === "code" ? (
@@ -29,7 +29,7 @@ export default function JoinSessionForm({ onJoin }: { onJoin: () => void }) {
           <button type="submit" className="button-primary w-full">Join demo session</button>
         </form>
       ) : (
-        <div className="rounded-xl bg-canvas p-5">
+        <div className="rounded-xl bg-elevated p-5">
           <h3 className="font-semibold">{method === "qr" ? "Scan a host's QR code" : "Open your host's invite link"}</h3>
           <p className="mt-2 text-sm leading-6 text-muted">{method === "qr" ? "QR scanning will be available here in a future update." : "Invite links will open the host's session here in a future update."} For now, try the demo using a session code.</p>
           <button className="text-link mt-3 min-h-11 cursor-pointer text-sm" onClick={() => setMethod("code")}>Enter Session Code</button>

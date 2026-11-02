@@ -65,7 +65,7 @@ function UserRegister() {
   return (
     <PageShell>
       <section className="panel p-6 sm:p-9" aria-labelledby="registerTitle">
-        <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-accent">
           Join the game
         </p>
         <h1
@@ -81,7 +81,7 @@ function UserRegister() {
         {submitted ? (
           <div
             role="status"
-            className="rounded-xl border border-line bg-tint p-5 text-sm leading-6"
+            className="rounded-xl border border-line bg-success-tint p-5 text-sm leading-6"
           >
             <h2
               ref={successRef}
@@ -171,7 +171,7 @@ function UserRegister() {
                     aria-controls="password"
                     aria-pressed={showPassword}
                     onClick={() => setShowPassword(!showPassword)}
-                    className="text-link absolute inset-y-1 right-1 cursor-pointer px-3 text-xs hover:bg-tint"
+                    className="text-link absolute inset-y-1 right-1 cursor-pointer px-3 text-xs hover:bg-elevated"
                   >
                     {showPassword ? "Hide" : "Show"}
                   </button>

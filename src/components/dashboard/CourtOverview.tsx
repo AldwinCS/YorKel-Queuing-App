@@ -11,7 +11,7 @@ export default function CourtOverview({ courts }: { courts: Court[] }) {
           <li key={court.id} className="panel rounded-2xl px-2 py-4 text-center sm:px-4">
             <span aria-hidden="true" className={`mx-auto mb-3 block h-1.5 w-1.5 rounded-full ${court.status === "available" ? "bg-success" : court.status === "playing" ? "bg-accent" : "bg-warning"}`} />
             <h3 className="text-sm font-semibold">{court.name}</h3>
-            <p className="mt-1.5 text-[11px] text-muted sm:text-xs">{courtLabels[court.status]}</p>
+            <p className="mt-1.5 text-xs text-muted sm:text-sm">{courtLabels[court.status]}</p>
           </li>
         ))}
       </ul>

@@ -16,7 +16,7 @@ export default function SubpageHeader({ title, backTo, backLabel, action }: Subp
         <Link
           to={backTo}
           aria-label={`Back to ${backLabel}`}
-          className="inline-flex min-h-11 w-fit items-center gap-2 rounded-full px-2 text-sm font-semibold text-ink transition-colors hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className="inline-flex min-h-11 w-fit items-center gap-2 rounded-full px-2 text-sm font-semibold text-ink transition-colors hover:bg-elevated focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           <DashboardIcon name="back" className="h-5 w-5" />
           <span>Back</span>

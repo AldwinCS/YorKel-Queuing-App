@@ -79,18 +79,18 @@ export default function BackupRestore() {
         </div>
         {(notice || error) && <p role={error ? "alert" : "status"} className={`mb-8 rounded-xl border p-4 text-sm leading-6 ${error ? "border-danger/40 bg-danger-tint text-danger-dark" : "border-line bg-paper"}`}>{error || notice}</p>}
 
-        <section aria-labelledby="createBackupTitle">
-          <span aria-hidden="true" className="mb-7 flex h-16 w-16 items-center justify-center rounded-2xl bg-tint text-accent"><DashboardIcon name="shield" className="h-8 w-8" /></span>
+        <section aria-labelledby="createBackupTitle" className="panel p-5 sm:p-7">
+          <span aria-hidden="true" className="mb-7 flex h-16 w-16 items-center justify-center rounded-2xl bg-elevated text-ink"><DashboardIcon name="shield" className="h-8 w-8" /></span>
           <h2 id="createBackupTitle" className="text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">Back up your profile</h2>
           <p className="mt-4 max-w-2xl text-base leading-7 text-muted sm:text-lg">Your profile is stored on this browser. Create a private recovery code so you can restore it after changing devices or clearing browser data.</p>
           <button type="button" onClick={createCode} className="button-primary mt-7 w-full text-base">Create my recovery code</button>
 
-          {recoveryCode && <div className="mt-6 rounded-2xl border border-line bg-paper p-4"><label htmlFor="recoveryCode" className="form-label">Your recovery code</label><textarea id="recoveryCode" readOnly value={recoveryCode} rows={4} className="form-input h-auto resize-none py-3 font-mono text-xs leading-5" /><p className="mt-3 text-xs leading-5 text-muted">Anyone with this code can restore this local profile. Store it privately.</p><div className="mt-4 grid gap-3 sm:grid-cols-2"><button type="button" onClick={() => void copyCode()} className="button-secondary gap-2"><DashboardIcon name="copy" className="h-4 w-4" />Copy code</button><button type="button" onClick={downloadBackup} className="button-secondary gap-2"><DashboardIcon name="download" className="h-4 w-4" />Download file</button></div></div>}
+          {recoveryCode && <div className="mt-6 rounded-2xl border border-line bg-elevated p-4"><label htmlFor="recoveryCode" className="form-label">Your recovery code</label><textarea id="recoveryCode" readOnly value={recoveryCode} rows={4} className="form-input h-auto resize-none py-3 font-mono text-sm leading-5" /><p className="mt-3 text-sm leading-5 text-muted">Anyone with this code can restore this local profile. Store it privately.</p><div className="mt-4 grid gap-3 sm:grid-cols-2"><button type="button" onClick={() => void copyCode()} className="button-secondary gap-2"><DashboardIcon name="copy" className="h-4 w-4" />Copy code</button><button type="button" onClick={downloadBackup} className="button-secondary gap-2"><DashboardIcon name="download" className="h-4 w-4" />Download file</button></div></div>}
         </section>
 
-        <div className="my-10 border-t border-line sm:my-12" />
+        <div className="h-6 sm:h-8" />
 
-        <section aria-labelledby="restoreTitle">
+        <section aria-labelledby="restoreTitle" className="panel p-5 sm:p-7">
           <h2 id="restoreTitle" className="text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">Restore a profile</h2>
           <p className="mt-4 max-w-2xl text-base leading-7 text-muted sm:text-lg">Choose a saved YorKel backup file or paste a recovery code from another device.</p>
           <div className="mt-7 grid gap-3 sm:grid-cols-2">
@@ -99,7 +99,7 @@ export default function BackupRestore() {
             <input ref={fileInput} type="file" accept="application/json,.json" className="sr-only" aria-label="Choose profile backup" onChange={(event) => void restoreFile(event)} />
           </div>
 
-          {showPaste && <div id="pasteRecoveryCode" className="mt-5 rounded-2xl border border-line bg-paper p-4"><label htmlFor="pastedRecoveryCode" className="form-label">Recovery code</label><textarea id="pastedRecoveryCode" value={pastedCode} onChange={(event) => setPastedCode(event.target.value)} rows={5} autoComplete="off" spellCheck={false} className="form-input h-auto resize-y py-3 font-mono text-xs leading-5" placeholder="Paste your YorKel recovery code" /><button type="button" disabled={!pastedCode.trim()} onClick={restoreCode} className="button-primary mt-4 w-full">Restore this profile</button></div>}
+          {showPaste && <div id="pasteRecoveryCode" className="mt-5 rounded-2xl border border-line bg-elevated p-4"><label htmlFor="pastedRecoveryCode" className="form-label">Recovery code</label><textarea id="pastedRecoveryCode" value={pastedCode} onChange={(event) => setPastedCode(event.target.value)} rows={5} autoComplete="off" spellCheck={false} className="form-input h-auto resize-y py-3 font-mono text-sm leading-5" placeholder="Paste your YorKel recovery code" /><button type="button" disabled={!pastedCode.trim()} onClick={restoreCode} className="button-primary mt-4 w-full">Restore this profile</button></div>}
 
           <p className="mt-7 flex items-start gap-3 text-sm leading-6 text-muted"><DashboardIcon name="info" className="mt-0.5 h-5 w-5 shrink-0" />Restoring replaces the YorKel profile stored in this browser. Create a recovery code for your current profile first if you may need it later.</p>
         </section>

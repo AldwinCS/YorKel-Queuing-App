@@ -36,7 +36,7 @@ function WebLogin() {
   return (
     <PageShell>
       <section className="panel p-6 sm:p-9" aria-labelledby="loginTitle">
-        <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent">Back to the court</p>
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-accent">Back to the court</p>
         <h1 id="loginTitle" className="text-3xl font-semibold tracking-tight">Welcome back</h1>
         <p className="mt-3 mb-7 text-sm leading-6 text-muted">Log in to continue to your next game.</p>
 
@@ -68,7 +68,7 @@ function WebLogin() {
                   aria-controls="password"
                   aria-pressed={showPassword}
                   onClick={() => setShowPassword((visible) => !visible)}
-                  className="absolute inset-y-0 right-0 flex min-h-11 w-12 cursor-pointer items-center justify-center rounded-r-xl text-muted transition-colors hover:bg-tint hover:text-accent focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent"
+                  className="absolute inset-y-0 right-0 flex min-h-11 w-12 cursor-pointer items-center justify-center rounded-r-xl text-muted transition-colors hover:bg-elevated hover:text-ink focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent"
                 >
                   {showPassword ? (
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
